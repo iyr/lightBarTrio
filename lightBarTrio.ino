@@ -81,8 +81,8 @@ void loop() {
   int LEDsPerBulb = NUM_LEDS / constrain(numBulbs, 1, 6);
   for (int j = 0; j < numBulbs; j++) {
     int tmr = int(bulbsCurRGB[j][0] * 255.0);
-    int tmg = int(bulbsCurRGB[j][1] * 164.0);
-    int tmb = int(bulbsCurRGB[j][2] * 128.0);
+    int tmg = int(bulbsCurRGB[j][1] * 192.0);
+    int tmb = int(bulbsCurRGB[j][2] * 164.0);
     for (int i = 0; i < LEDsPerBulb; i++) {
       strip[constrain(i + j * LEDsPerBulb, 0, 120)] = CRGB(tmr, tmg, tmb);
     }
