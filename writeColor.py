@@ -1,4 +1,5 @@
 # Script to develop/experiment heavenli/arduino communication
+#!/bin/python3
 
 import glob
 import serial
@@ -24,12 +25,11 @@ def sendColor(n, q, r, g, b):
     print(tmn, tmq, tmr, tmg, tmb)
     print("sending...")
     print(tmm)
-    stateMach['device'].write(tmm)
+    stateMach['devices'].write(tmm)
     
 def establishConnection():
     global stateMach
     curTime = time.time()
-    print("[HOST] Searching for Heavenli devices over serial...")
 
     ports = getSerialPorts()
     i = 0
@@ -43,42 +43,43 @@ def establishConnection():
         time.sleep(0.5)
         ports = getSerialPorts()
 
-    print("Found Serial devices on ports: " + str(ports))
+    print("Found Serial devicess on ports: " + str(ports))
 
-    #print("[HOST] Available ports:" + str(ports))
-    stateMach['device'] = serial.Serial(ports[0], 115200)
-    stateMach['device'].close()
-    stateMach['device'].open()
-    time.sleep(2)
-
-    print("[HOST] Sending syn packets")
+    for i in range(len(ports)):
+        stateMach['devices'][i] = serial.Serial(ports[i], 115200)
+        stateMach['devices'][i].close()
+        stateMach['devices'][i].open()
+    #stateMach['devices'] = serial.Serial(ports[0], 115200)
+    #stateMach['devices'].close()
+    #stateMach['devices'].open()
+    #time.sleep(1)
+    print("[HOST] Searching for Heavenli devicess over serial...")
 
     connectionEstablished = False
     sendOrReceive = True
     while not connectionEstablished:
         if time.time() - stateMach['t0'] > 0.251:
             if (sendOrReceive):
-                #print("[HOST] Hello device, are you there?")
-                #enmass = cobs.encode(b'quack')+b'\x00'
-                #stateMach['device'].write(enmass)
+                enmass = cobs.encode(b'quack')+b'\x00'
+                stateMach['devices'].write(enmass)
                 sendOrReceive = False
 
             else:
-                bytesToRead = stateMach['device'].inWaiting()
+                bytesToRead = stateMach['devices'].inWaiting()
                 if (bytesToRead > 0):
                     try:
                         print("[HOST] Incoming Bytes: " + str(int(bytesToRead)))
                         zeroByte = b'\x00'
-                        mess = stateMach['device'].read_until( zeroByte )[0:-1]
+                        mess = stateMach['devices'].read_until( zeroByte )[0:-1]
                         mess = str(cobs.decode( mess ))[2:-1]
                         print(mess)
-                        #stateMach['device'].flushInput()
+                        #stateMach['devices'].flushInput()
                     except:
                         print("Error Decoding Packet")
 
                 if (bytesToRead > 128):
                     #print("flushing buffer")
-                    stateMach['device'].flushInput()
+                    stateMach['devices'].flushInput()
                 sendOrReceive = True
 
             #sendOrReceive = not sendOrReceive
@@ -109,6 +110,7 @@ def getSerialPorts():
             s.close()
             result.append(port)
         except (OSError, serial.SerialException):
+            #print("Port: " + str(port) + " not available")
             pass
 
     return result
@@ -119,10 +121,10 @@ if __name__ == '__main__':
     stateMach['t0'] = time.time()
     establishConnection()
     while True:
-        bytesToRead = device.inWaiting()
+        bytesToRead = devices.inWaiting()
         if bytesToRead > 0:
             print("Incoming Bytes: " + str(int(bytesToRead)))
-            mess = str(stateMach['device'].read(bytesToRead))[2:-1]
+            mess = str(stateMach['devices'].read(bytesToRead))[2:-1]
             print(mess)
             if mess == "quack":
                 sendColor(3, 1, 0.7, 0.4, 0.1)
