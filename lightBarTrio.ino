@@ -52,7 +52,8 @@ void setup() {
 }
 
 void loop() {
-   digitalWrite(LED_BUILTIN, HIGH);
+   //digitalWrite(LED_BUILTIN, HIGH);
+
    if (digitalRead(DATA_PIN) == HIGH) {
       uint8_t packet[4] = "HIGH";
       lightBar.send(packet, 4);
@@ -78,12 +79,12 @@ void loop() {
             bulbsTarRGB[i][1] = 0.0;
             bulbsTarRGB[i][2] = 0.0;
          }
-      
-         if (curBulb > numBulbs)
-            curBulb = 0;
-         else
-            curBulb += 1;
       }
+
+      if (curBulb > numBulbs)
+         curBulb = 0;
+      else
+         curBulb += 1;
    }
 
    updateLEDs(tDiff / 2.0);
