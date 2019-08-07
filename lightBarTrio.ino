@@ -5,7 +5,7 @@
 
 #define NUM_LEDS 120
 #define DATA_PIN A0
-#define LED_PIN 11
+#define LED_PIN 12
 
 //Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 CRGB strip[NUM_LEDS];
@@ -28,6 +28,7 @@ void setup() {
    pinMode(5, OUTPUT);
    pinMode(9, OUTPUT);
    pinMode(10, OUTPUT);
+   //pinMode(11, INPUT);
    analogWrite(10, 0);
    analogWrite(9, 0);
    analogWrite(5, 0);
