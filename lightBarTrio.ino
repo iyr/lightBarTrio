@@ -114,6 +114,7 @@ void loop() {
       for (int i = 0; i < client.lamp.getNumBulbs(); i++) {
          uint8_t minVal = 255;
          client.lamp.getBulbCurrentRGB(i, rgb);
+         /*
          if (  rgb[0] == 255  &&
                rgb[1] == 255  &&
                rgb[2] == 255  ){
@@ -121,6 +122,7 @@ void loop() {
          } else {
             analogWrite(11-i, 0);
          }
+         */
          for (int j = 0; j < 3; j++) {
             if ( rgb[j] < minVal )
                minVal = rgb[j];
