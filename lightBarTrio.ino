@@ -5,7 +5,7 @@
 
 #define NUM_LEDS 120
 #define DATA_PIN A0
-#define LED_PIN 5
+#define LED_PIN 11
 
 //Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 CRGB strip[NUM_LEDS];
@@ -25,12 +25,12 @@ void setup() {
 
    pinMode(DATA_PIN, INPUT);
 
+   pinMode(5, OUTPUT);
    pinMode(9, OUTPUT);
    pinMode(10, OUTPUT);
-   pinMode(11, OUTPUT);
-   analogWrite(11, 0);
    analogWrite(10, 0);
    analogWrite(9, 0);
+   analogWrite(5, 0);
 
    pinMode(LED_BUILTIN, OUTPUT);
    digitalWrite(LED_BUILTIN, LOW);
@@ -127,8 +127,23 @@ void loop() {
             if ( rgb[j] < minVal )
                minVal = rgb[j];
          }
+
          bW[i] = minVal;
-         analogWrite(11 - i, minVal);
+         
+         switch(i) {
+            case 0:
+            analogWrite(5, minVal);
+            break;
+
+            case 1:
+            analogWrite(10, minVal);
+            break;
+
+            case 2:
+            analogWrite(9, minVal);
+            break;
+         }
+         //analogWrite(11 - i, minVal);
       }
       bW[0] = map(bW[0], 0, 255, 0, 180);
       bW[1] = map(bW[1], 0, 255, 0, 180);
